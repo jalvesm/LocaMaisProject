@@ -77,7 +77,7 @@ void registraFilial(void)
 
     if (log == NULL)
     {
-        fputs("Error at opening File!", stderr); // stderr é o quê carai???????????????
+        fputs("Error at opening File!", stderr); // stderr é o quê???????????
         exit(1);
     }
 
@@ -149,7 +149,7 @@ int cadastraCliente(/*precisa de parâmetros?*/);
 
 void menuPrincipal()
 {
-    int inputMenuPrincipal;
+    int op;
 
     printf("\n\n");
     printf("+---------------------------------------------------+\n");
@@ -170,42 +170,44 @@ void menuPrincipal()
     printf("|\n");
     printf("+---------------------------------------------------+\n");
     printf("|\n| Sua escolha: ");
-    scanf("%d", &inputMenuPrincipal);
+    scanf("%d", &op);
 
     switch (inputMenuPrincipal)
     {
     case 0:
         printf("|\n|\nVocê escolheu:\n| 0. Sair do programa!\n");
-        void saiDoPrograma();
+        saiDoPrograma();
         break;
     
     case 1:
-        printf("|\n|\nVocê escolheu:\n| 1. Cadastro de veículo\n");
-        int cadastraCliente(/*precisa de parâmetros?*/);
+        printf("|\n|\nVocê escolheu:\n| 1. Cadastro de cliente\n");
+        cadastrarCliente();
+        break;
 
     case 2:
-        printf("|\n|\nVocê escolheu:\n| 2. Cadastro de locação\n");
-        int cadastraCliente(/*precisa de parâmetros?*/);
+        printf("|\n|\nVocê escolheu:\n| 2. Cadastro de veículo\n");
+        cadastraVeiculo();
+        break;
     
     case 3:
         printf("|\n|\nVocê escolheu:\n| 3. Cadastro de locação\n");
-        int cadastraCliente(/*precisa de parâmetros?*/);
+        break;
     
     case 4:
         printf("|\n|\nVocê escolheu:\n| 4. Baixa na locação\n");
-        int cadastraCliente(/*precisa de parâmetros?*/);
+        break;
     
     case 5:
         printf("|\n|\nVocê escolheu:\n| 5. Pesquisar cliente\n");
-        int cadastraCliente(/*precisa de parâmetros?*/);
+        break;
     
     case 6:
         printf("|\n|\nVocê escolheu:\n| 6. Pesquisar veículo\n");
-        int cadastraCliente(/*precisa de parâmetros?*/);
+        break;
 
     case 7:
         printf("|\n|\nVocê escolheu:\n| 7. Visualizar locação por cliente\n");
-        int cadastraCliente(/*precisa de parâmetros?*/);
+        break;
 
     default:
         break;
