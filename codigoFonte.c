@@ -2,12 +2,19 @@
 #include <stdlib.h>
 #include <locale.h>
 
+#define qtdVeiculosDaLocadora 500
+
+int retornaCodigoVeiculo();
+void cadastraVeiculo();
+
 
 int main()
 {
     setlocale (LC_ALL, "portuguese");
+    srand(time(NULL));
 
-    int exibeTelaBoasVindas(void); // esse void deve ser o parâmetro que a função recebe!
+    exibeTelaBoasVindas(void); // esse void deve ser o parâmetro que a função recebe!
+    cadastraVeiculo();
 
     return 0;
 }
@@ -139,14 +146,14 @@ void menuPrincipal()
     printf("|\n");
     printf("| Favor escolher uma das opções abaixo:");
     printf("\n|\n");
-    printf("| 0. Sair do programa! _____________________________+\n");
-    printf("| 1. Cadastro de cliente ___________________________+\n");
-    printf("| 2. Cadastro de veículo ___________________________+\n");
-    printf("| 3. Cadastro de locação ___________________________+\n");
-    printf("| 4. Baixa na locação ______________________________+\n"); // [DÚVIDA SOBRE FUNÇÃO]
-    printf("| 5. Pesquisar cliente _____________________________+\n");
-    printf("| 6. Pesquisar veículo _____________________________+\n");
-    printf("| 7. Visualizar locação por cliente ________________+\n");
+    printf("| 0. Sair do programa!\n");
+    printf("| 1. Cadastro de cliente\n");
+    printf("| 2. Cadastro de veículo\n");
+    printf("| 3. Cadastro de locação\n");
+    printf("| 4. Baixa na locação\n"); // [DÚVIDA SOBRE FUNÇÃO]
+    printf("| 5. Pesquisar cliente\n");
+    printf("| 6. Pesquisar veículo\n");
+    printf("| 7. Visualizar locação por cliente\n");
     printf("|\n");
     printf("+---------------------------------------------------+\n");
     printf("|\n| Sua escolha: ");
@@ -197,4 +204,86 @@ void menuPrincipal()
 void saiDoPrograma()
 {
     printf("\n\nFIM DO PROGRAMA!");
+}
+
+
+struct Veiculo
+{
+    int codigoVeiculo;
+    char descricao[50];
+    char modelo[20];
+    char cor[10];
+    int placa;
+    float valorDiaria;
+    int qtdMaxOcupantes;
+    char status[5];
+};
+
+void cadastraVeiculo()
+{
+    FILE *ponteiroVeiculos = fopen("veiculosCadastrados.txt", "a");
+
+    if (ponteiroVeiculos == NULL)
+    {
+        printf("O arquivo não pode ser aberto!\nO programa vai te redirecionar automaticamente para o menu principal.\n");
+        menuPrincipal()
+    }
+    else
+    {
+        struct Veiculo veiculo;
+
+        veiculo.codigoVeiculo = retornaCodigoVeiculo();
+
+        printf("Informe a descrição do veículo: ");
+        fgets(veiculo.descricao, 50, stdin);
+        fflush(stdin);
+        
+        printf("Informe o modelo do veículo: ");
+        fgets(veiculo.modelo, 20, stdin);
+        fflush(stdin);
+
+        printf("Informe a cor do veículo: ");
+        fgets(veiculo.cor, 10, stdin);
+        fflush(stdin);
+
+        printf("Informe o status atual do veículo (ocup/disp): ");
+        fgets(veiculo.status, 5, stdin);
+        fflush(stdin);
+
+        printf("Informe a placa do veículo: ");
+        scanf("%d", &veiculo.placa);
+        fflush(stdin);
+
+        printf("Informe o valor da diária deste veículo: R$");
+        scanf("%f", &veiculo.valorDiaria);
+        fflush(stdin);
+
+        printf("Informe a capacidade máxima de ocupantes para este veículo: ");
+        scanf("%d", &veiculo.qtdMaxOcupantes);
+
+        fprintf(ponteiroVeiculos, "Código do veículo: %d\n", veiculo.codigoVeiculo);
+        fprintf(ponteiroVeiculos, "Descrição: %s", veiculo.descricao);
+        fprintf(ponteiroVeiculos, "Modelo: %s", veiculo.descricao);
+        fprintf(ponteiroVeiculos, "Cor: %s", veiculo.cor);
+        fprintf(ponteiroVeiculos, "Placa: %d\n", veiculo.placa);
+        fprintf(ponteiroVeiculos, "Valor da diária: R$%.2f\n", veiculo.valorDiaria);
+        fprintf(ponteiroVeiculos, "Capacidade máxima de ocupantes para este veículo: %i\n", veiculo.qtdMaxOcupantes);
+        fprintf(ponteiroVeiculos, "Status do veículo: %s\n", veiculo.status);
+        fprintf(ponteiroVeiculos, "\n\n");
+
+        printf("\nVEÍCULO CADASTRADO COM SUCESSO!");
+    }
+
+    fclose(ponteiroVeiculos);
+}
+
+int retornaCodigoVeiculo()
+{
+    int codigoVeiculo;
+
+    for (int i = 0; i <= 999; i++)
+    {
+        codigoVeiculo = (rand() % (999 - 100 + 1) + 100);
+        return codigoVeiculo;
+    }
 }
