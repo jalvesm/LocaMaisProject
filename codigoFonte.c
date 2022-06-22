@@ -7,6 +7,18 @@
 int retornaCodigoVeiculo();
 void cadastraVeiculo();
 
+struct cadastroCliente
+{
+    char cliente[50];
+    int ddd;
+    int telefone;
+    char rua[10];
+    char bairro[20];
+    int numero;
+    char complemento[20];
+};
+
+typedef struct cadastroCliente cliente;
 
 int main()
 {
@@ -15,6 +27,7 @@ int main()
 
     exibeTelaBoasVindas(void); // esse void deve ser o parâmetro que a função recebe!
     cadastraVeiculo();
+    cadastrarCliente();
 
     return 0;
 }
@@ -285,5 +298,51 @@ int retornaCodigoVeiculo()
     {
         codigoVeiculo = (rand() % (999 - 100 + 1) + 100);
         return codigoVeiculo;
+    }
+}
+
+void cadastrarCliente()
+{
+    FILE *arquivoCadastroClientes;
+    cliente c;
+    printf("\tBem vindo ao cadastro de clientes!\n");
+    printf("\t----------------------------------\n");
+    printf("\n\tNome do cliente: ");
+    gets(c.cliente);
+    fflush(stdin);
+    printf("\t----------------------------------\n");
+    printf("\n\t\tTelefone\n");
+    printf("\n\tDDD: ");
+    scanf("%i", &c.ddd);
+    printf("\tNúmero: ");
+    scanf("%i", &c.telefone);
+    printf("\t----------------------------------\n");
+    printf("\n\t\tEndereço");
+    printf("\n\n\tRua: ");
+    fflush(stdin);
+    gets(c.rua);
+    fflush(stdin);
+    printf("\tBairro: ");
+    fflush(stdin);
+    gets(c.bairro);
+    fflush(stdin);
+    printf("\tNúmero: ");
+    scanf("%i", &c.numero);
+    printf("\tComplemento: ");
+    fflush(stdin);
+    gets(c.complemento);
+    fflush(stdin);
+    printf("\n\tCadastro realizado com sucesso!");
+
+    if ((arquivoCadastroClientes = fopen("arquivoCadastroClientes.txt", "a")) == NULL)
+    {
+        printf("Erro na abertura do arquivo.");
+    }
+    else
+    {
+        fprintf(arquivoCadastroClientes, "\t------------------\n\t[Informações Gerais]\n\n\tNome do cliente: %s\n\n", c.cliente);
+        fprintf(arquivoCadastroClientes, "\t[Telefone]\n\n\tNúmero: (%i)%i\n\n", c.ddd, c.telefone);
+        fprintf(arquivoCadastroClientes, "\t[Endereço]\n\n\tRua: %s\n\tBairro: %s\n\tNúmero: %i\n\tComplemento: %s\n\n\n", c.rua, c.bairro, c.numero, c.complemento);
+        fclose(arquivoCadastroClientes);
     }
 }
