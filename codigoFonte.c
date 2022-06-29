@@ -305,3 +305,27 @@ void listaClientes(FILE *fclientes)
         fread(&c, sizeof(c), 1, fclientes);
     }
 }
+
+void pesquisaCliente(FILE *fclientes)
+{
+    cliente c;
+    int codigoPesquisado;
+    fseek(fclientes, 0, SEEK_SET);
+    fread(&c, sizeof(c), 1, fclientes);
+    printf("\n\t[Pesquisar Cliente]\n");
+    printf("\n\tDigite o código do cliente a ser pesquisado: ");
+    scanf("%i", &codigoPesquisado);
+    while(!feof(fclientes))
+    {
+        if(codigoPesquisado == c.codigo)
+        {
+            printf("\n\n\t[Dados do cliente]\n");
+            printf("\tNome: %s\n", c.nome);
+            printf("\tCódigo (CPF): %i\n", c.codigo);
+            printf("\tTelefone: (%i)%i\n", c.ddd, c.telefone);
+            printf("\tRua: %s\n\tBairro: %s\n\tNúmero: %i\n\tComplemento: %s\n", c.rua, c.bairro, c.numero, c.complemento);
+        }
+
+        fread(&c, sizeof(c), 1, fclientes);
+    }
+}
