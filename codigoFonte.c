@@ -25,7 +25,7 @@ struct TVeiculo
     char cor[10];
     int placa;
     float valorDiaria;
-    int qtdMaxOcupantes;
+    int capacidadeMaxOcupantes;
     char status[5];
 };
 typedef struct TVeiculo veiculo;
