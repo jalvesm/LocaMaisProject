@@ -70,7 +70,7 @@ void pesquisarVeiculos(FILE *veiculoPtr);
 // prototipo funções locação
 
 int menuLocacao();
-void cadastrarLocacao(FILE *locacaoPtr, FILE *clientePtr, FILE *veiculoPtr);
+void cadastrarLocacao();
 
 int main()
 {
@@ -84,9 +84,9 @@ int main()
 
         printf("\n\n\tFavor escolher uma das opções abaixo:\n\n");
         printf("\t\t0. Sair do programa!\n");
-        printf("\t\t1. Cadastro de cliente\n");
-        printf("\t\t2. Cadastro de veículo\n");
-        printf("\t\t3. Cadastro de locação\n\n");
+        printf("\t\t1. Menu cliente\n");
+        printf("\t\t2. Menu veículo\n");
+        printf("\t\t3. Menu locação\n\n");
         /*printf("\t\t4. Pesquisar cliente\n");
         printf("\t\t5. Pesquisar veículo\n");
         printf("\t\t6. Visualizar locação por cliente\n\n");*/
@@ -131,8 +131,7 @@ int main()
                 // função;
                 break;*/
         }
-    }
-    while (op != 0);
+    } while (op != 0);
 
     return 0;
 }
@@ -329,6 +328,7 @@ int menuVeiculos()
         printf("\t2 - Alterar veículo\n");
         printf("\t3 - Listar veículos\n");
         printf("\t4 - Pesquisar veículos\n");
+        printf("\t5 - Pesquisar veículos para locação\n");
         printf("\t0 - Voltar ao menu principal\n");
         printf("\tEscolha: ");
         scanf("%i", &op);
@@ -341,7 +341,7 @@ int menuVeiculos()
 
         case 2:
             printf("\n\tVocê escolheu alterar os dados do veículo!\n\n");
-            // alteraVeiculo(veiculoPtr);
+            //
             break;
 
         case 3:
@@ -352,6 +352,11 @@ int menuVeiculos()
         case 4:
             printf("\n\tVocê escolheu pesquisar os veículos!\n\n");
             pesquisarVeiculos(veiculoPtr);
+            break;
+
+        case 5:
+            printf("\n\tVocê escolheu pesquisar veículos para locação!\n\n");
+            pesquisarOcupantes(veiculoPtr);
             system("pause");
             break;
         }
@@ -473,7 +478,7 @@ void pesquisarVeiculos(FILE *veiculoPtr) // Pesquisa veiculo por codigo
     system("pause");
 }
 
-int menuLocacao(FILE *clientePtr, FILE *veiculoPtr)
+int menuLocacao()
 {
     FILE *locacaoPtr;
 
@@ -505,30 +510,54 @@ int menuLocacao(FILE *clientePtr, FILE *veiculoPtr)
         {
         case 1:
             printf("\n\tVocê escolheu cadastrar uma locação!\n\n");
-            cadastrarLocacao(locacaoPtr, clientePtr, veiculoPtr);
+            // pesquisarOcupantes(veiculoPtr);
             break;
 
         case 2:
             printf("\n\tVocê escolheu alterar os dados da locação!\n\n");
-            //alteraLocacao(locacaoPtr);
+            // alteraLocacao(locacaoPtr);
             break;
 
         case 3:
             printf("\n\tVocê escolheu listar todas as locações!\n\n");
-            //listarLocacao(locacaoPtr);
+            // listarLocacao(locacaoPtr);
             break;
 
         case 4:
             printf("\n\tVocê escolheu pesquisar as locações de um cliente!\n\n");
-            //pesquisarLocacaoClientes(locacaoPtr);
+            // pesquisarLocacaoClientes(locacaoPtr);
             system("pause");
             break;
         }
 
-    }
-    while (op != 0);
+    } while (op != 0);
     fclose(locacaoPtr);
     return 0;
 }
 
+void pesquisarOcupantes(FILE *veiculoPtr) // Pesquisa veiculo por codigo
+{
+    veiculo v;
+    int pesquisaOcupantes;
+    fseek(veiculoPtr, 0, SEEK_SET);
+    fread(&v, sizeof(v), 1, veiculoPtr);
+    printf("\n\t[Pesquisar Ocupantes]\n");
+    printf("\n\tDigite a quantidade de ocupantes a ser pesquisado: ");
+    scanf("%i", &pesquisaOcupantes);
+    while (!feof(veiculoPtr))
+    {
+        if (pesquisaOcupantes == v.capacidadeMaxOcupantes)
+        {
+            if (strcmp(v.status, "disponivel") == 0)
+            {
+                printf("\n\n\t[Dados do veículo]\n\n");
+                printf("\tModelo: %s\n\tCódigo: %i\n", v.modelo, v.codigoVeiculo);
+                printf("\tCor: %s\n\tPlaca: %d\n\tValor da diária: R$%2.2f\n", v.cor, v.placa, v.valorDiaria);
+                printf("\tOcupantes: %d\tStatus: %s\n", v.capacidadeMaxOcupantes, v.status);
+            }
+        }
 
+        fread(&v, sizeof(v), 1, veiculoPtr);
+    }
+    system("pause");
+}
