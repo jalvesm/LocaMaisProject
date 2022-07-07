@@ -579,7 +579,6 @@ void pesquisarOcupantes(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr, in
         fread(&v, sizeof(v), 1, veiculoPtr);
         fclose(veiculoPtr);
     }
-    system("pause");
 }
 
 // função a ser fatorada para o cadastro de locação
