@@ -67,12 +67,12 @@ void pesquisarVeiculos(FILE *veiculoPtr);
 
 // prototipo funções locação
 
-int menuLocacao();
+int menuLocacao(locacaoPtr, veiculoPtr, clientePtr, qtdDesejada);
 int localizaLocacao(FILE *locacaoPtr,int codigo);
-void cadastrarLocacao(FILE *locacaoPtr, FILE *clientePtr, FILE *locacaoPtr);
+void cadastrarLocacao(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada);
 
 
-int main()
+int main(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
 {
     setlocale(LC_ALL, "portuguese");
     int op;
@@ -111,7 +111,7 @@ int main()
         case 3:
             printf("\n\t\t>> 3. Cadastro de locação\n\n");
             imprimirLinha();
-            menuLocacao();
+            menuLocacao(locacaoPtr, veiculoPtr, clientePtr, qtdDesejada);
             break;
 
             /*case 4:
@@ -492,7 +492,7 @@ void pesquisarVeiculos(FILE *veiculoPtr) // Pesquisa veiculo por codigo
     system("pause");
 }
 
-int menuLocacao()
+int menuLocacao(FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
 {
     FILE *locacaoPtr;
 
@@ -524,7 +524,7 @@ int menuLocacao()
         {
         case 1:
             printf("\n\tVocê escolheu cadastrar uma locação!\n\n");
-            // pesquisarOcupantes(veiculoPtr);
+            cadastrarLocacao(locacaoPtr, veiculoPtr, clientePtr, qtdDesejada);
             break;
 
         case 2:
@@ -549,17 +549,17 @@ int menuLocacao()
     return 0;
 }
 
-void pesquisarOcupantes(FILE *veiculoPtr, int qtdDesejada) // Pesquisa veiculo por codigo
+void pesquisarOcupantes(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr, int qtdDesejada) // Pesquisa veiculo por codigo
 {
     veiculo v;
     locacao loc;
     veiculoPtr = fopen("veiculosCadastrados.dat", "r+b");
     clientePtr = fopen("clientesCadastrados.dat", "r+b");
     locacaoPtr = fopen("cadastraLocacao.dat", "r+b");
-    
-    fseek(veiculoPtr, 0, SEEK_SET);
-    fread(&v, sizeof(v), 1, veiculoPtr);
-    
+
+     fseek(veiculoPtr, 0, SEEK_SET);
+     fread(&v, sizeof(v), 1, veiculoPtr);
+
     while (!feof(veiculoPtr))
     {
         if (qtdDesejada == v.capacidadeMaxOcupantes)
@@ -570,7 +570,10 @@ void pesquisarOcupantes(FILE *veiculoPtr, int qtdDesejada) // Pesquisa veiculo p
                 printf("\tModelo: %s\n\tCódigo: %i\n", v.modelo, v.codigoVeiculo);
                 printf("\tCor: %s\n\tPlaca: %d\n\tValor da diária: R$%2.2f\n", v.cor, v.placa, v.valorDiaria);
                 printf("\tOcupantes: %d\tStatus: %s\n", v.capacidadeMaxOcupantes, v.status);
+
+                fread(&v, sizeof(v), 1, veiculoPtr);
             }
+
         }
 
         fread(&v, sizeof(v), 1, veiculoPtr);
@@ -582,17 +585,14 @@ void pesquisarOcupantes(FILE *veiculoPtr, int qtdDesejada) // Pesquisa veiculo p
 // função a ser fatorada para o cadastro de locação
 
 
-void cadastrarLocacao(FILE *locacaoPtr)
-{ 
+void cadastrarLocacao(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
+{
     locacao loc;
     veiculo v;
     cliente c;
-    
-    clientePtr = fopen("clientesCadastrados.dat", "r+b");
-    veiculoPtr = fopen("veiculosCadastrados.dat", "r+b");
-    
-    int posicaoCliente, posicaoCliente, qtdOcupantes, mostrarVeiculosDisponiveis;
-    
+
+    int posicaoCliente, posicaoLocacao, qtdOcupantes, mostrarVeiculosDisponiveis;
+
     //lendo os dados do teclado
     printf("Digite o código da locação a ser cadastrada: ");
     fflush(stdin);
@@ -601,12 +601,12 @@ void cadastrarLocacao(FILE *locacaoPtr)
     posicaoLocacao = localizaLocacao(locacaoPtr, loc.codigoLoc);
 
     if (posicaoLocacao == -1) //não tinha codigo no arquivo
-    { 
+    {
         printf("Informe o código do cliente que deseja realizar a locação: ");
         fflush(stdin);
         scanf("%d", &loc.codigo);
-
         posicaoCliente = localizarClientes(clientePtr, loc.codigo);
+
         if (posicaoCliente != -1) // tinha código
         {
             printf("Informe a quantidade de ocupantes que o cliente deseja: ");
@@ -614,7 +614,7 @@ void cadastrarLocacao(FILE *locacaoPtr)
             scanf("%d", &qtdDesejada);
 
             printf("\n\nAqui estão os veículos disponíveis para a locação: \n");
-            pesquisarOcupantes(veiculoPtr, qtdDesejada);
+            pesquisarOcupantes(veiculoPtr, clientePtr, locacaoPtr, qtdDesejada);
 
             printf("Informe o código do veículo que o cliente deseja alugar: ");
             fflush(stdin);
@@ -633,39 +633,40 @@ void cadastrarLocacao(FILE *locacaoPtr)
             printf("Cliente não encontrado. Você será redirecionado ao cadastro de cliente automaticamente.\n");
             cadastrarClientes(clientePtr);
         }
-        
+
         fseek(locacaoPtr, 0, SEEK_END); // posicionado o arquivo no final
         fwrite(&loc, sizeof(loc),1,locacaoPtr); //gravando os dados
         fflush(locacaoPtr);
     }
     else
-    { 
+    {
         printf("Código %d já existe no arquivo. Inclusão não realizada!\n");
     }
 }
 
 int localizaLocacao(FILE *locacaoPtr,int codigo)
-{ 
+{
     int posicao = -1, achou = 0;
     locacao loc;
     fseek(locacaoPtr,0,SEEK_SET);
     fread(&loc, sizeof(loc),1, locacaoPtr);
     while (!feof(locacaoPtr) && !achou)
-    { 
+    {
         posicao++; // semelhante a posicao = posicao +1;
         if (loc.codigoLoc == codigo)
-        { 
+        {
             achou = 1;
         }
             fread(&loc, sizeof(loc), 1, locacaoPtr);
         }
-        
+
         if (achou)
-        { 
+        {
             return posicao;
         }
         else
-        { 
+        {
             return -1;
         }
 }
+
