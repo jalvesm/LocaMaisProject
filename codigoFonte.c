@@ -551,6 +551,7 @@ int menuLocacao(FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
 
 void pesquisarOcupantes(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr, int qtdDesejada) // Pesquisa veiculo por codigo
 {
+    printf("Entrou em pesquisar ocupantes.");
     veiculo v;
     locacao loc;
     veiculoPtr = fopen("veiculosCadastrados.dat", "r+b");
@@ -577,8 +578,8 @@ void pesquisarOcupantes(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr, in
         }
 
         fread(&v, sizeof(v), 1, veiculoPtr);
-        fclose(veiculoPtr);
     }
+        fclose(veiculoPtr);
 }
 
 // função a ser fatorada para o cadastro de locação
