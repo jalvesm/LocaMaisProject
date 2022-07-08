@@ -39,7 +39,7 @@ struct TLocacao
     int dataDevReal;
     int dataDevPrevista;
     float multa;
-    char seguro[5];
+    int seguro;
     int diasDeAtraso;
     float totalPagar;
 };
@@ -362,7 +362,6 @@ int menuVeiculos() // mostra opções para escolher determinadas funções da pa
         printf("\t2 - Alterar veiculo\n");
         printf("\t3 - Listar veiculos\n");
         printf("\t4 - Pesquisar veiculos\n");
-        printf("\t5 - Pesquisar veiculos para locação\n");
         printf("\t0 - Voltar ao menu principal\n");
         printf("\tEscolha: ");
         scanf("%i", &op);
@@ -386,11 +385,6 @@ int menuVeiculos() // mostra opções para escolher determinadas funções da pa
         case 4:
             printf("\n\tVocê escolheu pesquisar os veículos!\n\n");
             pesquisarVeiculos(veiculoPtr);
-            break;
-
-        case 5:
-            printf("\n\tVocê escolheu pesquisar veículos para locação!\n\n");
-            //
             system("pause");
             break;
         }
@@ -633,7 +627,6 @@ int menuLocacao(FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada) // opções
 
 void pesquisarOcupantes(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr, int qtdDesejada) // Verifica se há veículos disponíveis baseado na quantidade de ocupantes desejados
 {
-    printf("Entrou em pesquisar ocupantes.");
     veiculo v;
     locacao loc;
     veiculoPtr = fopen("veiculosCadastrados.dat", "r+b");
@@ -652,7 +645,7 @@ void pesquisarOcupantes(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr, in
                 printf("\n\n\t[Dados do veículo]\n\n");
                 printf("\tModelo: %s\n\tCódigo: %i\n", v.modelo, v.codigoVeiculo);
                 printf("\tCor: %s\n\tPlaca: %d\n\tValor da diária: R$%2.2f\n", v.cor, v.placa, v.valorDiaria);
-                printf("\tOcupantes: %d\tStatus: %s\n", v.capacidadeMaxOcupantes, v.status);
+                printf("\tOcupantes: %d\tStatus: %s\n\n", v.capacidadeMaxOcupantes, v.status);
 
                 fread(&v, sizeof(v), 1, veiculoPtr);
             }
@@ -674,7 +667,7 @@ void cadastrarLocacao(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int 
     int posicaoCliente, posicaoLocacao, qtdOcupantes, mostrarVeiculosDisponiveis;
 
     // lendo os dados do teclado
-    printf("Digite o código da locação a ser cadastrada: ");
+    printf("\tDigite o código da locação a ser cadastrada: ");
     fflush(stdin);
     scanf("%d", &loc.codigoLoc);
 
