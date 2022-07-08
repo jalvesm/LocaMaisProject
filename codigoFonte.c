@@ -67,7 +67,6 @@ void listarVeiculos(FILE *veiculoPtr);
 void pesquisarVeiculos(FILE *veiculoPtr);
 void alteraVeiculo(FILE *veiculoPtr);
 
-
 // prototipo funções locação
 
 int menuLocacao(locacaoPtr, veiculoPtr, clientePtr, qtdDesejada);
@@ -75,6 +74,8 @@ int localizaLocacao(FILE *locacaoPtr, int codigo);
 void cadastrarLocacao(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada);
 void listaLocacaoDoCliente(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr);
 void listarLocacao(FILE *locacaoPtr);
+void alteraLocacao(FILE *locacaoPtr);
+
 
 int main(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
 {
@@ -91,10 +92,6 @@ int main(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
         printf("\t\t1. Menu cliente\n");
         printf("\t\t2. Menu veiculo\n");
         printf("\t\t3. Menu locacao\n\n");
-        /*printf("\t\t4. Pesquisar cliente\n");
-        printf("\t\t5. Pesquisar veículo\n");
-        printf("\t\t6. Visualizar locação por cliente\n\n");*/
-
         printf("\n\t\tSua escolha: ");
         scanf("%d", &op);
 
@@ -117,34 +114,20 @@ int main(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
             imprimirLinha();
             menuLocacao(veiculoPtr, clientePtr, qtdDesejada);
             break;
-
-            /*case 4:
-                printf("\n\t\t>> 4. Pesquisar cliente\n\n");
-                //imprimirLinha();
-                break;
-            case 5:
-                printf("\n\t\t>> 5. Pesquisar veículo\n\n");
-                imprimirLinha();
-                break;
-            case 6:
-                printf("\n\t\t>> 6. Visualizar locação por cliente\n\n");
-                imprimirLinha();
-                // função;
-                break;*/
         }
     } while (op != 0);
 
     return 0;
 }
 
-void imprimirLinha()
+void imprimirLinha() // imprime linha no menu pra deixar bonitinho
 {
     printf("\n\t+---------------------------------------------------+\n");
 }
 
 /* Parte do cliente */
 
-int menuClientes()
+int menuClientes() // apresenta opções para funções da parte de cadastro de clientes
 {
     FILE *clientePtr;
     int op;
@@ -313,7 +296,7 @@ void pesquisarClientes(FILE *clientePtr) // Pesquisa cliente por codigo
     system("pause");
 }
 
-void alteraCliente(FILE *clientePtr) //Função que altera os dados do cliente
+void alteraCliente(FILE *clientePtr) // Função que altera os dados do cliente
 
 {
     int codigo, posicao;
@@ -356,7 +339,7 @@ void alteraCliente(FILE *clientePtr) //Função que altera os dados do cliente
 
 /*Parte do veiculo*/
 
-int menuVeiculos()
+int menuVeiculos() // mostra opções para escolher determinadas funções da parte de veículos
 {
     FILE *veiculoPtr;
     int op;
@@ -537,7 +520,7 @@ void pesquisarVeiculos(FILE *veiculoPtr) // Pesquisa veiculo por codigo
     system("pause");
 }
 
-void alteraVeiculo(FILE *veiculoPtr) //Função que altera os dados do veículo
+void alteraVeiculo(FILE *veiculoPtr) // Função que altera os dados do veículo
 
 {
     int codigo, posicao;
@@ -591,7 +574,7 @@ void alteraVeiculo(FILE *veiculoPtr) //Função que altera os dados do veículo
 
 /*Parte da Locação*/
 
-int menuLocacao(FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
+int menuLocacao(FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada) // opções para escolher determinadas funções da parte de locação
 {
     FILE *locacaoPtr;
 
@@ -628,7 +611,7 @@ int menuLocacao(FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
 
         case 2:
             printf("\n\tVocê escolheu alterar os dados da locação!\n\n");
-            // alteraLocacao(locacaoPtr);
+            alteraLocacao(locacaoPtr);
             break;
 
         case 3:
@@ -682,7 +665,7 @@ void pesquisarOcupantes(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr, in
 
 // função a ser fatorada para o cadastro de locação
 
-void cadastrarLocacao(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada)
+void cadastrarLocacao(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int qtdDesejada) // cadastra uma locação
 {
     locacao loc;
     veiculo v;
@@ -741,7 +724,7 @@ void cadastrarLocacao(FILE *locacaoPtr, FILE *veiculoPtr, FILE *clientePtr, int 
     }
 }
 
-int localizaLocacao(FILE *locacaoPtr, int codigo)
+int localizaLocacao(FILE *locacaoPtr, int codigo) // verifica se o código da locação já foi utilizado anteriormente
 {
     int posicao = -1, achou = 0;
     locacao loc;
@@ -801,7 +784,7 @@ void listaLocacaoDoCliente(FILE *veiculoPtr, FILE *clientePtr, FILE *locacaoPtr)
     fclose(locacaoPtr);
 }
 
-void listarLocacao(FILE *locacaoPtr) // Lista TODAS as locações
+void listarLocacao(FILE *locacaoPtr) // Lista TODAS as locações no geral
 {
     locacao loc;
     locacaoPtr = fopen("cadastraLocacao.dat", "r+b");
@@ -817,5 +800,45 @@ void listarLocacao(FILE *locacaoPtr) // Lista TODAS as locações
         printf("\tData de retirada: %i\n", loc.dataRetirada);
         printf("\tData de devolução prevista: %i\n", loc.dataDevPrevista);
         fread(&loc, sizeof(loc), 1, locacaoPtr);
+    }
+}
+
+void alteraLocacao(FILE *locacaoPtr) // Função que altera os dados do veículo
+
+{
+    int codigo, posicao;
+    locacao loc;
+    printf("\tDigite o codigo da locação para alterar: ");
+    scanf("%d", &codigo);
+    posicao = localizaLocacao(locacaoPtr, codigo);
+    if (posicao != -1) // localizou o veiculo
+    {
+        fseek(locacaoPtr, sizeof(loc) * (posicao), SEEK_SET);
+        fread(&loc, sizeof(loc), 1, locacaoPtr);
+        printf("\n\n\t[Dados atuais do veiculo]\n\n");
+        printf("\tCódigo do veículo: %i\n", loc.codigoVeiculo);
+        printf("\tData de retirada: %i\n", loc.dataRetirada);
+        printf("\tData de devolução prevista: %i\n", loc.dataDevPrevista);
+
+        printf("\n\n\t[Alterar dados]\n\n");
+        printf("Digite o código da locação a ser cadastrada: ");
+        fflush(stdin);
+        scanf("%d", &loc.codigoLoc);
+
+        printf("\tInforme o código do veículo que o cliente deseja alugar: ");
+        fflush(stdin);
+        scanf("%d", &loc.codigoVeiculo);
+
+        printf("\tInforme a data de retirada do veículo: ");
+        fflush(stdin);
+        scanf("%i", &loc.dataRetirada);
+
+        printf("\tInforme a data prevista de devolução do veículo: ");
+        fflush(stdin);
+        scanf("%i", &loc.dataDevPrevista);
+
+        fseek(locacaoPtr, sizeof(loc) * (posicao), SEEK_SET);
+        fwrite(&loc, sizeof(loc), 1, locacaoPtr);
+        fflush(locacaoPtr);
     }
 }
