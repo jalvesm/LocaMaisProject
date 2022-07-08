@@ -803,7 +803,7 @@ void listarLocacao(FILE *locacaoPtr) // Lista TODAS as locações no geral
     }
 }
 
-void alteraLocacao(FILE *locacaoPtr) // Função que altera os dados do veículo
+void alteraLocacao(FILE *locacaoPtr) // Função que altera os dados da locação
 
 {
     int codigo, posicao;
@@ -811,7 +811,7 @@ void alteraLocacao(FILE *locacaoPtr) // Função que altera os dados do veículo
     printf("\tDigite o codigo da locação para alterar: ");
     scanf("%d", &codigo);
     posicao = localizaLocacao(locacaoPtr, codigo);
-    if (posicao != -1) // localizou o veiculo
+    if (posicao != -1) // localizou a locação
     {
         fseek(locacaoPtr, sizeof(loc) * (posicao), SEEK_SET);
         fread(&loc, sizeof(loc), 1, locacaoPtr);
